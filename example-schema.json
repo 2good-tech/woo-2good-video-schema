@@ -1,0 +1,11 @@
+{
+    "@context":"https://schema.org/",
+    "@type":"VideoObject",
+    "@id":"url#videoobject",
+    "url":"POST URL",
+    "name":"video_name",
+    "description":"video_desc",
+    "uploadDate":"video_uploadDate",
+    "thumbnailUrl":"video_thumbnail_url",
+    "contentUrl":"video_url"
+}
