@@ -26,4 +26,3 @@ function add_2good_video_schema() {
 }
 
 add_action('wp_head', 'add_2good_video_schema', 1);
-

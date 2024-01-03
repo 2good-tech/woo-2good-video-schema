@@ -4,11 +4,14 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
+include_once plugin_dir_path(__FILE__) . '../includes/main.php';
+
 class TooGoodVideoSchema {
 
     public function __construct() {
         add_action('admin_menu', array($this, 'create_2good_video_schema_menu'));
         add_action('admin_init', array($this, 'init_2good_video_schema_settings'));
+        add_action('wp_ajax_parse_all_schemas', array($this, 'parse_all_schemas'));
     }
 
     function create_2good_video_schema_menu() {
@@ -41,8 +44,12 @@ class TooGoodVideoSchema {
                 settings_fields('2good_vs');
                 do_settings_sections('2good_vs');
                 submit_button(__('Save Settings', '2gvs'));
+                
                 ?>
             </form>
+            <hr>
+            <button type="button" id="parse_all_schemas" class="button button-primary">Parse all</button>
+            <hr>
         </div>
         <?php
     }
@@ -71,6 +78,42 @@ class TooGoodVideoSchema {
         $youtube_api_key = get_option('2good_vs_api_key');
         echo '<input type="text" name="2good_vs_api_key" value="' . esc_attr($youtube_api_key) . '"/>';
     }
+
+    function get_video_schema_count() {
+        global $wpdb; // WordPress database global variable
+    
+        $query = "SELECT COUNT(DISTINCT post_id) FROM {$wpdb->postmeta} WHERE meta_key = '2good_video_schemas'";
+        $count = $wpdb->get_var($query);
+    
+        return $count;
+    }
+    
+
+    function parse_helper() {
+        $args = array(
+            'post_type'      => array('post', 'page', 'product'),
+            'posts_per_page' => -1,
+            'post_status'    => 'publish',
+        );
+        
+        $all_posts = get_posts($args);
+        
+        foreach ($all_posts as $post) {
+            parse_all_from_Gut_admin($post->ID);
+            parse_all_from_Ele_admin($post->ID);
+        }
+        
+    }
+    
+    public function parse_all_schemas() {
+        $this->parse_helper();
+        
+        $schemas_count = $this->get_video_schema_count();
+        echo json_encode(['success' => true, 'message' => 'Parsing completed.', 'count' => $schemas_count]);
+        wp_die();
+    }
+    
+    
 }
 
 // Instantiate the main class
