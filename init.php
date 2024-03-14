@@ -17,7 +17,7 @@ function add_2good_video_schema() {
 
             if (!empty($all_schemas)) {
                 // Encode all schemas into JSON and output in a single script tag
-                echo '<script type="application/ld+json" class="2good-video-schemas">' . 
+                echo '<script type="application/ld+json" class="2GOOD-video-schema-plugin">' . 
                      json_encode($all_schemas, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . 
                      '</script>';
             }
@@ -25,4 +25,4 @@ function add_2good_video_schema() {
     }
 }
 
-add_action('wp_head', 'add_2good_video_schema', 1);
+add_action('wp_head', 'add_2good_video_schema', 5);

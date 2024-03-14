@@ -29,7 +29,6 @@ function get_youtube_video_details($video_id, $api_key) {
 
 function get_dailymotion_video_details($url) {
   // Placeholder for Dailymotion API request and response handling.
- 
   return null;
 }
 
