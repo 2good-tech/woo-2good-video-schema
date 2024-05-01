@@ -130,7 +130,7 @@ function generate_video_schema($api_res, $post_id) {
         "url" => get_permalink($post_id),
         "name" => $video_data['name'],
         "uploadDate" => $video_data['uploadDate'],
-        "description" => $description,
+        "description" => $description ? $description : $video_data['name'],
         "thumbnailUrl" => $video_data['thumbnail_url'],
         "contentUrl" => $video_data['url'],
     ];

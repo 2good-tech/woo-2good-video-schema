@@ -2,7 +2,7 @@
 /*
  * Plugin Name: 2GOOD Video Schema
  * Description: Adds video schema markup to posts with Video blocks/elements created via Elementor or Gutenburg.
- * Version: 1.0.1
+ * Version: 1.0.2
  * Author: 2GOOD Technologies Ltd.
  * Author URI: https://2good.tech
  * License: GPLv2 or later

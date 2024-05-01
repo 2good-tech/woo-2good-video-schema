@@ -151,13 +151,13 @@ function parse_all_from_Gut_admin($post_id) {
 
     $post_object = get_post($post_id);
         if (!$post_object) {
-            error_log('Gutenberg -> Unable to retrieve post object for post ' . $post_id);
+            //error_log('Gutenberg -> Unable to retrieve post object for post ' . $post_id);
             return;
         }
 
         // Only proceed if the post is published to avoid parsing DRAFTS!
         if ($post_object->post_status != 'publish') {
-            error_log('Gutenberg -> POST status is :' . $post_object->post_status);
+            //error_log('Gutenberg -> POST status is :' . $post_object->post_status);
             return;
         }
 
@@ -216,34 +216,33 @@ function parse_all_from_Gut_admin($post_id) {
         }
 }
 
-function action_save_post_Editors($post_id, $editor_data) {
+function action_save_post_Editors($post_id) {
+
+    if (wp_is_post_revision($post_id) || wp_is_post_autosave($post_id)) {
+        return; // Skip processing for autosaves and revisions
+    }
+
+    // Retrieve the post object
+    $post_object = get_post($post_id);
+    if (!$post_object) {
+        //error_log('Unable to retrieve post object for post ' . $post_id);
+        return;
+    }
+
+    // Only proceed if the post is published to avoid parsing DRAFTS!
+    if ($post_object->post_status != 'publish') {
+        //error_log('Gutenberg -> POST status is :' . $post_object->post_status);
+        return;
+    }
 
     if (isset($_POST['action']) && $_POST['action'] == 'elementor_ajax') {
         //error_log('Elementor save detected, skipping Gutenberg processing ' . $post_id);
         return;
-        
-    } else if (isset($_POST['action']) && empty($_POST['_ajax_nonce']) && $_POST['action'] == 'editpost') {
+    }
 
-        // Your existing checks for revisions and autosaves
-        if (wp_is_post_revision($post_id) || wp_is_post_autosave($post_id)) {
-            return; // Skip processing for autosaves and revisions
-        }
-
+    // check if the post is being updated or published with Gutenberg editor
+    if ( isset($_POST['action']) && $_POST['action'] == 'editpost' && has_blocks($post_object->post_content) ) {
         //error_log('Gutenberg -> POST IS ' . $post_id);
-
-        // Retrieve the post object
-        $post_object = get_post($post_id);
-        if (!$post_object) {
-            error_log('Gutenberg -> Unable to retrieve post object for post ' . $post_id);
-            return;
-        }
-
-        // Only proceed if the post is published to avoid parsing DRAFTS!
-        if ($post_object->post_status != 'publish') {
-            error_log('Gutenberg -> POST status is :' . $post_object->post_status);
-            return;
-        }
-
         $post_content = $post_object->post_content;
         $blocks = parse_blocks($post_content);
         $videoUrls = find_video_block_Gutenberg($blocks);

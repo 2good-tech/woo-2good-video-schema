@@ -30,8 +30,13 @@ class TooGoodVideoSchema {
     }
     
     public function enqueue_2good_video_scripts() {
-        wp_enqueue_style('2good_video_style', plugin_dir_url(__FILE__) . 'assets/admin-style.css');
-        wp_enqueue_script('2good_video_script', plugin_dir_url(__FILE__) . 'assets/admin-script.js', array(), false, true);
+        //load only when in the plugin admin page
+        if (get_current_screen()->id !== 'toplevel_page_2good_video_schema_menu') {
+            return;
+        } else {
+            wp_enqueue_style('2good_video_style', plugin_dir_url(__FILE__) . 'assets/admin-style.css');
+            wp_enqueue_script('2good_video_script', plugin_dir_url(__FILE__) . 'assets/admin-script.js', array(), false, true);
+        }
     }
     
     public function page_2good_video_schema_menu() {
